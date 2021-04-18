@@ -1,0 +1,12 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Home</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <tr th:each="fa : ${fas}">
+        <a th:text="${fa.handle}" th:href="'/' + ${fa.handle}">${fa.handle}</a>
+    </tr>
+</body>
+</html>

@@ -4,13 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import Scraper.Scraper;
 import xyz.mgurga.jitter.utils.Tweet;
 
 class ScraperTests {
-	Scraper scraper = new Scraper();
+	static Scraper scraper = new Scraper();
 
 	@Test
 	void simpleTweet() throws IOException {
@@ -33,5 +34,10 @@ class ScraperTests {
 		assertTrue(result.getLikes() > 40);
 		assertTrue(result.getRetweets() > 10);
 	}
-
+	
+	@AfterAll
+	static void cleanup() {
+		scraper.quit();
+	}
+	
 }

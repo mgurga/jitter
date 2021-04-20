@@ -18,8 +18,33 @@ class ScraperTests {
 		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/1375500518366216199");
 		
 		assertEquals("subtweeting is an art", result.getContent());
+		assertEquals("Twitter Web App", result.getDevice());
+		assertEquals("2021-03-26T17:30Z[UTC]", result.getPostDate().toString());
 		assertTrue(result.getRetweets() > 7500);
 		assertTrue(result.getLikes() >= 78400);
+	}
+	
+	@Test
+	void simpleTweetWithLink() throws IOException {
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/508964519872176129");
+		
+		assertEquals("A new way for you to discover and buy products on Twitter:", result.getContent());
+		assertEquals("TweetDeck", result.getDevice());
+		assertEquals("2014-09-08T13:06Z[UTC]", result.getPostDate().toString());
+		assertTrue(result.getRetweets() > 920);
+		assertTrue(result.getLikes() > 660);
+	}
+	
+	@Test
+	void simpleTweetWithImage() throws IOException {
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/673882166980284416");
+		
+		assertEquals("Starting today, we’re introducing a richer photo experience on https://twitter.com/: "
+				+ "https://blog.twitter.com/2015/a-new-look-for-your-twittercom-photos", result.getContent());
+		assertEquals("Twitter Web Client", result.getDevice());
+		assertEquals("2015-12-07T15:10Z[UTC]", result.getPostDate().toString());
+		assertTrue(result.getRetweets() > 1300);
+		assertTrue(result.getLikes() > 2160);
 	}
 	
 	@Test
@@ -31,6 +56,8 @@ class ScraperTests {
 				+ "She'll be focusing on how to work with nested JSON and sending your data to a CSV. \n"
 				+ "\n"
 				+ "Join us on Twitch!", result.getContent());
+		assertEquals("Twitter Web App", result.getDevice());
+		assertEquals("2021-03-11T20:33Z[UTC]", result.getPostDate().toString());
 		assertTrue(result.getLikes() > 40);
 		assertTrue(result.getRetweets() > 10);
 	}

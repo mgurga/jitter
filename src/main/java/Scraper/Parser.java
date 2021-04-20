@@ -10,6 +10,7 @@ public class Parser {
 	}
 	
 	public String parseTweet(String raw) {
+		raw = raw.replace("…", "");
 		String[] rawparts = raw.split("\n");
 		String out = "";
 		

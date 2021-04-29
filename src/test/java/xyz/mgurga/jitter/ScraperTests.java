@@ -21,7 +21,7 @@ class ScraperTests {
 		assertEquals("Twitter Web App", result.getDevice());
 		assertEquals("2021-03-26T17:30Z[UTC]", result.getPostDate().toString());
 		assertTrue(result.getRetweets() > 7500);
-		assertTrue(result.getLikes() >= 78400);
+		assertTrue(result.getLikes() >= 78000);
 	}
 	
 	@Test
@@ -60,6 +60,19 @@ class ScraperTests {
 		assertEquals("2021-03-11T20:33Z[UTC]", result.getPostDate().toString());
 		assertTrue(result.getLikes() > 40);
 		assertTrue(result.getRetweets() > 10);
+	}
+	
+	@Test
+	void multilineRetweet() throws IOException {
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/TwitterDev/status/1371363033352638467");
+		
+		assertEquals("If you're using v2 full-archive search for Academic Research, you won't want to miss this livestream hosted by our research dev advocate @suhemparack.\n"
+				+ "\n"
+				+ "Mark your calendars to join us on http://twitch.tv/twitterdev Thursday March 18th, 10AM PT/ 1PM ET.", result.getContent());
+		assertEquals("Twitter Web App", result.getDevice());
+		assertEquals("", result.getPostDate());
+		assertTrue(result.getLikes() > 30);
+		assertTrue(result.getRetweets() > 7);
 	}
 	
 	@AfterAll

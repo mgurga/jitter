@@ -67,16 +67,21 @@ public class Scraper {
 				tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div/div")).getText()));
 		
 		// set likes and retweets
-		if(tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-1]/div//span[@style]")).size() == 2) {
-			out.setRetweets(parser.parseStr(
-					tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span)[1]")).getText()));
-			out.setLikes(parser.parseStr(
-					tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span[@style])[2]")).getText()));
-		} else {
-			out.setRetweets(parser.parseStr(
-					tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span)[2]")).getText()));
-			out.setLikes(parser.parseStr(
-					tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span[@style])[3]")).getText()));
+		try {
+			if(tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-1]/div//span[@style]")).size() == 2) {
+				out.setRetweets(parser.parseStr(
+						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span)[1]")).getText()));
+				out.setLikes(parser.parseStr(
+						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span[@style])[2]")).getText()));
+			} else {
+				out.setRetweets(parser.parseStr(
+						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span)[2]")).getText()));
+				out.setLikes(parser.parseStr(
+						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span[@style])[3]")).getText()));
+			}
+		} catch(NumberFormatException n) {
+			System.out.println("problem parsing, trying again");
+			return getTweet(author, id);
 		}
 		
 		// set tweet post date

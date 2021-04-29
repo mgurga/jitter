@@ -8,6 +8,7 @@ public class TAccount implements Serializable {
 	private String nickname;
 	private String bio;
 	private String avatarUrl;
+	private String headerUrl;
 	private int following;
 	private int followers;
 	
@@ -51,5 +52,11 @@ public class TAccount implements Serializable {
 	}
 	public void setAvatarUrl(String avatarUrl) {
 		this.avatarUrl = avatarUrl;
+	}
+	public String getHeaderUrl() {
+		return headerUrl;
+	}
+	public void setHeaderUrl(String headerUrl) {
+		this.headerUrl = headerUrl;
 	}
 }

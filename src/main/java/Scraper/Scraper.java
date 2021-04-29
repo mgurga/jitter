@@ -64,7 +64,6 @@ public class Scraper {
 		WebElement tweetelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
 		String baseXpath = "//article/div/div/div";
 		
-		// main tweet content
 		out.setContent(parser.parseTweet(
 				tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div/div")).getText()));
 		
@@ -87,7 +86,6 @@ public class Scraper {
 			return getTweet(author, id);
 		}
 		
-		// set tweet post date
 		String rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]")).getText();
 		rawdatestr = rawdatestr.replace("· ", "");
 		DateTimeFormatter twittertimeformat = DateTimeFormatter.ofPattern("h:mm a MMM d, uuuu");
@@ -95,7 +93,6 @@ public class Scraper {
 		ZonedDateTime zpostdt = ZonedDateTime.of(postdt, ZoneId.systemDefault());
 		out.setPostDate(zpostdt.withZoneSameInstant(ZoneId.of("UTC")));
 		
-		// set post device
 		String postdevice = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[2]")).getText();
 		out.setDevice(postdevice);
 		
@@ -110,19 +107,20 @@ public class Scraper {
 		driver.get(accounturl);
 		
 		WebElement accountelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
-		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]/div";
-
-		// set nickname
+		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
+		
 		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div[2]/div/div/div")).getText());
 		
-		// set avatar url
-		out.setAvatarUrl(accountelement.findElement(By.xpath(baseXpath + "/div[1]//img")).getAttribute("src"));
+		out.setAvatarUrl(accountelement.findElement(By.xpath(baseXpath + "/div/div[1]//img")).getAttribute("src"));
+		out.setHeaderUrl(accountelement.findElement(By.xpath(baseXpath + "/a/div/div[2]//img")).getAttribute("src"));
 		
-		// set following and followers
 		out.setFollowing(
-				parser.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div[last()]/div//span[1]")).getText()));
+				parser.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div/div[last()]/div//span[1]")).getText()));
 		out.setFollowers(
-				parser.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()]//span[1]")).getText()));
+				parser.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div/div[last()]/div[last()]//span[1]")).getText()));
+		
+		out.setBio(
+				parser.parseTweet(accountelement.findElement(By.xpath(baseXpath + "/div/div[3]/div/div")).getText()));
 		
 		return out;
 	}

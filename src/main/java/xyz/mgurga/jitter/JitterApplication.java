@@ -46,7 +46,7 @@ public class JitterApplication {
 		Tweet tweet = scraper.getTweet(handle, id);
 		model.addAttribute("fas", defaultaccounts);
 		model.addAttribute("tweet", tweet);
-		return "singletweet.html";
+		return "tweet.html";
 	}
 
 }

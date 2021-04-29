@@ -5,8 +5,13 @@ public class Parser {
 		String out = str;
 		out = out.replace(",", "");
 		out = out.replace(".", "");
-		out = out.replace("K", "00");
-		out = out.replace("M", "00000");
+		if(str.matches("[0-9]\\.[0-9][KM]")) {
+			out = out.replace("K", "00");
+			out = out.replace("M", "00000");
+		} else {
+			out = out.replace("K", "000");
+			out = out.replace("M", "000000");
+		}
 		return Integer.parseInt(out);
 	}
 	

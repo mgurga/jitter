@@ -84,14 +84,28 @@ class ScraperTests {
 	
 	@Tag("Account")
 	@Test
-	void twitterAccount() throws IOException {
+	void TwitterAccount() throws IOException {
 		TAccount result = scraper.getAccountInfo("Twitter");
 		
 		assertEquals("Twitter", result.getNickname());
 		assertEquals("Twitter", result.getHandle());
 		assertEquals("https://pbs.twimg.com/profile_images/1354479643882004483/Btnfm47p_200x200.jpg", result.getAvatarUrl());
+		assertEquals("What's happening?!", result.getBio());
 		assertTrue(result.getFollowers() > 59000000);
 		assertTrue(result.getFollowing() > 30);
+	}
+	
+	@Tag("Account")
+	@Test
+	void GoogleAccount() throws IOException {
+		TAccount result = scraper.getAccountInfo("Google");
+		
+		assertEquals("Google", result.getNickname());
+		assertEquals("Google", result.getHandle());
+		assertEquals("https://pbs.twimg.com/profile_images/1343584679664873479/Xos3xQfk_200x200.jpg", result.getAvatarUrl());
+		assertEquals("#HeyGoogle", result.getBio());
+		assertTrue(result.getFollowers() >= 23000000);
+		assertTrue(result.getFollowing() > 200);
 	}
 	
 	@AfterAll

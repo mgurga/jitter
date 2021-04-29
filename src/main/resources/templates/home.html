@@ -3,10 +3,11 @@
 <head> 
     <title>Home</title> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <tr th:each="fa : ${fas}">
-        <a th:text="${fa.handle}" th:href="'/' + ${fa.handle}">${fa.handle}</a>
+        <a class="favoriteaccount" th:text="${fa.handle}" th:href="'/' + ${fa.handle}"></a>
     </tr>
 </body>
 </html>

@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Home</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div th:replace="fragments/favoriteaccounts :: accounts" />
+    
+    <div id="singletweet">
+        <h4>Author</h4>
+        <h3 th:text="${tweet.content}"></h3>
+        <table style="table-layout: fixed; width:100%;">
+            <tr>
+                <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
+                <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
+                <td>Post Date: <th:block th:utext="${tweet.postDate}"/></td>
+                <td>Device: <th:block th:utext="${tweet.device}"/></td>
+            </tr>
+        </table>
+    </div>
+</body>
+<style>
+    #singletweet {
+        margin: auto;
+        width: 75%;
+        border: 1px solid grey;
+    }
+</style>
+</html>

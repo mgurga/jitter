@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
     <div th:fragment="accounts">
-        <tr th:each="fa : ${fas}">
-            <a class="favoriteaccount" th:text="${fa.handle}" th:href="'/' + ${fa.handle}"></a>
-        </tr>
+        <div style="width: 100%;">
+            <tr th:each="fa : ${fas}">
+                <a class="favoriteaccount" th:text="${fa.handle}" th:href="'/' + ${fa.handle}" />
+            </tr>
+        </div>
     </div>
 </html>

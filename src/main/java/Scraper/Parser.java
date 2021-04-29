@@ -5,7 +5,7 @@ public class Parser {
 		String out = str;
 		out = out.replace(",", "");
 		out = out.replace(".", "");
-		if(str.matches("[0-9]\\.[0-9][KM]")) {
+		if(str.contains(".")) {
 			out = out.replace("K", "00");
 			out = out.replace("M", "00000");
 		} else {

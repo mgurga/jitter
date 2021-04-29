@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import Scraper.Scraper;
 import xyz.mgurga.jitter.utils.TAccount;
-import xyz.mgurga.jitter.utils.Tweet;
 
 @SpringBootApplication
 @Controller
@@ -37,15 +36,14 @@ public class JitterApplication {
 	@GetMapping(value="/{handle}")
 	public String account(@PathVariable String handle, Model model) {
 		model.addAttribute("fas", defaultaccounts);
-		return "home.html";
+		model.addAttribute("account", scraper.getAccountInfo(handle));
+		return "account.html";
 	}
 	
 	@GetMapping(value="/{handle}/status/{id}")
 	public String singleTweet(@PathVariable String handle, @PathVariable String id, Model model) throws IOException {
-		System.out.println("getting tweet");
-		Tweet tweet = scraper.getTweet(handle, id);
 		model.addAttribute("fas", defaultaccounts);
-		model.addAttribute("tweet", tweet);
+		model.addAttribute("tweet", scraper.getTweet(handle, id));
 		return "tweet.html";
 	}
 

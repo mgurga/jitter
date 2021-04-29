@@ -1,17 +1,17 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head> 
-    <title>Home</title> 
+    <title>@<th:block th:utext="${tweet.content}"/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div th:replace="fragments/favoriteaccounts :: accounts" />
     
-    <div id="singletweet">
-        <h4>Author</h4>
+    <div id="middle">
+        <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
         <h3 th:text="${tweet.content}"></h3>
-        <table style="table-layout: fixed; width:100%;">
+        <table style="table-layout: fixed; width:100%; text-align: center;">
             <tr>
                 <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
                 <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
@@ -22,7 +22,7 @@
     </div>
 </body>
 <style>
-    #singletweet {
+    #middle {
         margin: auto;
         width: 75%;
         border: 1px solid grey;

@@ -96,6 +96,8 @@ public class Scraper {
 		String postdevice = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[2]")).getText();
 		out.setDevice(postdevice);
 		
+		out.setAuthor(this.getAccountInfo(author));
+		
 		return out;
 	}
 	
@@ -106,10 +108,10 @@ public class Scraper {
 		
 		driver.get(accounturl);
 		
-		WebElement accountelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
 		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
+		WebElement accountelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(baseXpath + "/div")));
 		
-		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div[2]/div/div/div")).getText());
+		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div/div[2]/div/div/div")).getText());
 		
 		out.setAvatarUrl(accountelement.findElement(By.xpath(baseXpath + "/div/div[1]//img")).getAttribute("src"));
 		out.setHeaderUrl(accountelement.findElement(By.xpath(baseXpath + "/a/div/div[2]//img")).getAttribute("src"));

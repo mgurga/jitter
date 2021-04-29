@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>@<th:block th:utext="${account.handle}"></title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div th:replace="fragments/favoriteaccounts :: accounts" />
+
+    <div id="middle">
+        <img id="header" th:src="${account.headerUrl}" />
+        <br />
+        <div id="avatartext">
+            <img id="avatarimg" th:src="${account.avatarUrl}" />
+            <div id="textcontent">
+                <h1 id="accountnick" th:text="${account.nickname}" />
+                <p id="accounthandle" >@<th:block th:utext="${account.handle}" />
+            </div>
+        </div>
+        
+        <div id="accountinfo" >
+            <table style="table-layout: fixed; width:100%; text-align: center;">
+                <tr>
+                    <td>Followers: <span class="importantinfo"><th:block th:utext="${account.followers}"/></span></td>
+                    <td>Following: <span class="importantinfo"><th:block th:utext="${account.following}"/></span></td>
+                </tr> 
+            </table>
+        </div>
+        
+        <p th:text="${account.bio}">
+    </div>
+</body>
+<style>
+    #middle {
+        margin: auto;
+        width: 75%;
+        border: 1px solid grey;
+    }
+    
+    #header {
+        width: 100%;
+    }
+    
+    #avatartext > * {
+        display: inline-block;
+    }
+    
+    #avatarimg {
+        height: 100px;
+    }
+    
+    #textcontent {
+        vertical-align: top;
+    }
+    
+    #accountnick {
+        margin-top: 10px;
+    }
+    
+    #accounthandle {
+        color: grey;
+        margin-bottom: 0;
+        margin-top: 5px;
+    }
+    
+    #accountinfo {
+        color: grey;
+        width: 90%;
+        margin: 5px 5%;
+        border-top: 1px solid #222222;
+        border-bottom: 1px solid #222222;
+    }
+    
+    .importantinfo {
+        color: white;
+    }
+</style>
+</html>

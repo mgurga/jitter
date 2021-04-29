@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html>
     <div th:fragment="accounts">
-        <div style="width: 100%;">
+        <div id="fabar">
             <tr th:each="fa : ${fas}">
                 <a class="favoriteaccount" th:text="${fa.handle}" th:href="'/' + ${fa.handle}" />
+                <p> - </p>
             </tr>
         </div>
+        <style>
+            #fabar > * {
+                display: inline-block;
+                margin: 0;
+            }
+        </style>
     </div>
 </html>

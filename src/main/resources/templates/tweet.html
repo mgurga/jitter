@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head> 
-    <title>@<th:block th:utext="${tweet.content}"/></title>
+    <title><th:block th:utext="${tweet.author.nickname}"/> tweeted "<th:block th:utext="${tweet.content}"/>"</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/css/styles.css">
 </head>

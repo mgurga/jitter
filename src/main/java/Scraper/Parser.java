@@ -6,6 +6,7 @@ public class Parser {
 		out = out.replace(",", "");
 		out = out.replace(".", "");
 		out = out.replace("K", "00");
+		out = out.replace("M", "00000");
 		return Integer.parseInt(out);
 	}
 	

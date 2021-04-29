@@ -1,6 +1,7 @@
 package Scraper;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -21,6 +22,7 @@ public class Scraper {
 	
 	private WebDriver driver;
 	private WebDriverWait wait;
+	private String twitterurl = "https://mobile.twitter.com/";
 	
 	public Scraper() {
 		FirefoxOptions options = new FirefoxOptions();
@@ -54,10 +56,10 @@ public class Scraper {
 	}
 	
 	public Tweet getTweet(String author, String id) throws IOException {
-		String twitterurl = "https://mobile.twitter.com/" + author + "/status/" + id;
+		String tweeturl = this.twitterurl + author + "/status/" + id;
 		Tweet out = new Tweet();
 		
-		driver.get(twitterurl);
+		driver.get(tweeturl);
 		
 		WebElement tweetelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
 		String baseXpath = "//article/div/div/div";
@@ -66,7 +68,8 @@ public class Scraper {
 		out.setContent(parser.parseTweet(
 				tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div/div")).getText()));
 		
-		// set likes and retweets
+		// set likes and retweets, retry if parsing error
+		// TODO: Sometimes NumberFormatException error
 		try {
 			if(tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-1]/div//span[@style]")).size() == 2) {
 				out.setRetweets(parser.parseStr(
@@ -95,6 +98,31 @@ public class Scraper {
 		// set post device
 		String postdevice = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[2]")).getText();
 		out.setDevice(postdevice);
+		
+		return out;
+	}
+	
+	public TAccount getAccountInfo(String handle) {
+		String accounturl = this.twitterurl + handle;
+		TAccount out = new TAccount();
+		out.setHandle(handle);
+		
+		driver.get(accounturl);
+		
+		WebElement accountelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
+		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]/div";
+
+		// set nickname
+		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div[2]/div/div/div")).getText());
+		
+		// set avatar url
+		out.setAvatarUrl(accountelement.findElement(By.xpath(baseXpath + "/div[1]//img")).getAttribute("src"));
+		
+		// set following and followers
+		out.setFollowing(
+				parser.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div[last()]/div//span[1]")).getText()));
+		out.setFollowers(
+				parser.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()]//span[1]")).getText()));
 		
 		return out;
 	}

@@ -5,14 +5,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import Scraper.Scraper;
+import xyz.mgurga.jitter.utils.TAccount;
 import xyz.mgurga.jitter.utils.Tweet;
 
 class ScraperTests {
 	static Scraper scraper = new Scraper();
 
+	@Tag("Tweet")
 	@Test
 	void simpleTweet() throws IOException {
 		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/1375500518366216199");
@@ -24,6 +27,7 @@ class ScraperTests {
 		assertTrue(result.getLikes() >= 78000);
 	}
 	
+	@Tag("Tweet")
 	@Test
 	void simpleTweetWithLink() throws IOException {
 		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/508964519872176129");
@@ -35,6 +39,7 @@ class ScraperTests {
 		assertTrue(result.getLikes() > 660);
 	}
 	
+	@Tag("Tweet")
 	@Test
 	void simpleTweetWithImage() throws IOException {
 		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/673882166980284416");
@@ -47,6 +52,7 @@ class ScraperTests {
 		assertTrue(result.getLikes() > 2160);
 	}
 	
+	@Tag("Tweet")
 	@Test
 	void multilineTweet() throws IOException {
 		Tweet result = scraper.getTweetFromURL("https://twitter.com/TwitterDev/status/1370110639545417729");
@@ -62,6 +68,7 @@ class ScraperTests {
 		assertTrue(result.getRetweets() > 10);
 	}
 	
+	@Tag("Tweet")
 	@Test
 	void multilineRetweet() throws IOException {
 		Tweet result = scraper.getTweetFromURL("https://twitter.com/TwitterDev/status/1371363033352638467");
@@ -73,6 +80,18 @@ class ScraperTests {
 		assertEquals("", result.getPostDate());
 		assertTrue(result.getLikes() > 30);
 		assertTrue(result.getRetweets() > 7);
+	}
+	
+	@Tag("Account")
+	@Test
+	void twitterAccount() throws IOException {
+		TAccount result = scraper.getAccountInfo("Twitter");
+		
+		assertEquals("Twitter", result.getNickname());
+		assertEquals("Twitter", result.getHandle());
+		assertEquals("https://pbs.twimg.com/profile_images/1354479643882004483/Btnfm47p_200x200.jpg", result.getAvatarUrl());
+		assertTrue(result.getFollowers() > 59000000);
+		assertTrue(result.getFollowing() > 30);
 	}
 	
 	@AfterAll

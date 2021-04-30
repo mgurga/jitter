@@ -1,11 +1,12 @@
 package Scraper;
 
 import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -39,7 +40,7 @@ public class Scraper {
 		String[] urlparts = url.split("/");
 		
 		for(int i = 0; i < urlparts.length; i++) {
-			if(urlparts[i].equals("twitter.com")) {
+			if(urlparts[i].contains("twitter.com")) {
 				author = urlparts[i+1];
 			}
 			if(urlparts[i].equals("status")) {
@@ -109,7 +110,7 @@ public class Scraper {
 		driver.get(accounturl);
 		
 		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
-		WebElement accountelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(baseXpath + "/div")));
+		WebElement accountelement = wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(By.tagName("article"), By.xpath(baseXpath + "/div")));
 		
 		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div/div[2]/div/div/div")).getText());
 		
@@ -123,6 +124,30 @@ public class Scraper {
 		
 		out.setBio(
 				parser.parseTweet(accountelement.findElement(By.xpath(baseXpath + "/div/div[3]/div/div")).getText()));
+		
+		return out;
+	}
+	
+	public ArrayList<Tweet> getAccountTweets(String handle) throws IOException {
+		String searchurl = this.twitterurl + "/search?q=from:" + handle + " -filter:replies&src=typed_query&f=live";
+		ArrayList<Tweet> out = new ArrayList<Tweet>();
+		
+		driver.get(searchurl);
+		
+		WebElement searchelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
+		List<WebElement> ses = searchelement.findElements(By.xpath("//article//time/..[@href]"));
+		ArrayList<String> hrefs = new ArrayList<String>();
+		System.out.println(ses.size());
+		
+		for(WebElement i : ses) {
+			System.out.println(i.getAttribute("href"));
+			hrefs.add(i.getAttribute("href"));
+		}
+		
+		for(String tweeturl : hrefs) {
+			System.out.println(tweeturl + " done");
+			out.add(this.getTweetFromURL(tweeturl));
+		}
 		
 		return out;
 	}

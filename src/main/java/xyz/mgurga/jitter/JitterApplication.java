@@ -34,9 +34,10 @@ public class JitterApplication {
 	}
 	
 	@GetMapping(value="/{handle}")
-	public String account(@PathVariable String handle, Model model) {
+	public String account(@PathVariable String handle, Model model) throws IOException {
 		model.addAttribute("fas", defaultaccounts);
 		model.addAttribute("account", scraper.getAccountInfo(handle));
+		model.addAttribute("acctweets", scraper.getAccountTweets(handle));
 		return "account.html";
 	}
 	

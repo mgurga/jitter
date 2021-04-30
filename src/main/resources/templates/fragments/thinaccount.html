@@ -2,34 +2,35 @@
 <html>
     <div th:fragment="thin(account)">
         <div style="width: 100%;">
-            <div id="avatartext">
-            <img id="avatarimg" th:src="${account.avatarUrl}" />
-            <div id="textcontent">
-                <h2 id="accountnick" th:text="${account.nickname}" />
-                <p id="accounthandle" >@<th:block th:utext="${account.handle}" />
+            <div class="avatartext">
+                <img class="avatarimg" th:src="${account.avatarUrl}" />
+                <div class="textcontent">
+                    <h2 class="accountnick" th:text="${account.nickname}" />
+                    <p class="accounthandle" >@<th:block th:utext="${account.handle}" />
+                </div>
             </div>
         </div>
+        <style>
+            .avatartext > * {
+                display: inline-block;
+            }
+            
+            .avatarimg {
+                height: 50px;
+            }
+            
+            .textcontent {
+                vertical-align: top;
+            }
+            
+            .accountnick {
+                margin: 0;
+            }
+            
+            .accounthandle {
+                color: grey;
+                margin: 0;
+            }
+        </style>
     </div>
-    <style>
-        #avatartext > * {
-            display: inline-block;
-        }
-        
-        #avatarimg {
-            height: 50px;
-        }
-        
-        #textcontent {
-            vertical-align: top;
-        }
-        
-        #accountnick {
-            margin: 0;
-        }
-        
-        #accounthandle {
-            color: grey;
-            margin: 0;
-        }
-    </style>
 </html>

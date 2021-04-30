@@ -82,6 +82,12 @@ class ScraperTests {
 		assertTrue(result.getRetweets() > 7);
 	}
 	
+	@Tag("Tweet")
+	@Test
+	void imageTweet() throws IOException {
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/GoogleDoodles/status/1385443314523115520");
+	}
+	
 	@Tag("Account")
 	@Test
 	void TwitterAccount() throws IOException {
@@ -108,9 +114,21 @@ class ScraperTests {
 		assertTrue(result.getFollowing() > 200);
 	}
 	
-	@AfterAll
-	static void cleanup() {
-		scraper.quit();
+	@Tag("Account")
+	@Test
+	void AndroidAccount() throws IOException {
+		TAccount result = scraper.getAccountInfo("Android");
+		
+		assertEquals("Android", result.getNickname());
+		assertEquals("Android", result.getHandle());
+		assertEquals("https://pbs.twimg.com/profile_images/1164525925242986497/N5_DCXYQ_200x200.jpg", result.getAvatarUrl());
+		assertEquals("#Android is made for everyone. Follow along for the latest updates and stories behind our tech.", result.getBio());
+		assertTrue(result.getFollowers() >= 10000000);
+		assertTrue(result.getFollowing() > 100);
 	}
 	
+	@AfterAll
+	static void cleanup() throws IOException {
+		scraper.quit();
+	}
 }

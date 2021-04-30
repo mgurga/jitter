@@ -8,7 +8,7 @@
 <body>
     <div th:replace="fragments/favoriteaccounts :: accounts" />
 
-    <div id="middle">
+    <div class="middle">
         <img id="header" th:src="${account.headerUrl}" />
         <br />
         <div id="avatartext">
@@ -30,9 +30,19 @@
         
         <p th:text="${account.bio}">
     </div>
+    
+    <br />
+    
+    <div class="middle">
+        <tr th:each="at : ${acctweets}">
+            <div class="smalltweetcontainer">
+                <div th:replace="fragments/smalltweet :: small(${at})" />
+            </div>
+        </tr>
+    </div>
 </body>
 <style>
-    #middle {
+    .middle {
         margin: auto;
         width: 75%;
         border: 1px solid grey;
@@ -74,6 +84,11 @@
     
     .importantinfo {
         color: white;
+    }
+    
+    .smalltweetcontainer {
+        border-top: 1px solid #222222;
+        border-bottom: 1px solid #222222;
     }
 </style>
 </html>

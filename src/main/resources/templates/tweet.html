@@ -10,7 +10,7 @@
     
     <div id="middle">
         <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
-        <h3 th:text="${tweet.content}"></h3>
+        <h3 th:utext="${tweet.content}"></h3>
         <table style="table-layout: fixed; width:100%; text-align: center;">
             <tr>
                 <td>Likes: <th:block th:utext="${tweet.likes}"/></td>

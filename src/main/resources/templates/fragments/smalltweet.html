@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <div th:fragment="small(tweet)">
+        <div class="smalltweet">
+            <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
+            <h4 class="smalltweetcontent" th:utext="${tweet.content}" />
+            <table style="table-layout: fixed; width:100%; text-align: center; margin-top: 5px; margin-bottom: 5px;">
+                <tr>
+                    <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
+                    <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
+                    <td>Post Date: <th:block th:utext="${tweet.postDate}"/></td>
+                    <td>Device: <th:block th:utext="${tweet.device}"/></td>
+                </tr>
+            </table>
+        </div>
+        <style>
+            .smalltweetcontent {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+        </style>
+    </div>
+</html>

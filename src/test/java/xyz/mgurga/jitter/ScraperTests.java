@@ -23,7 +23,7 @@ class ScraperTests {
 		assertEquals("subtweeting is an art", result.getContent());
 		assertEquals("Twitter Web App", result.getDevice());
 		assertEquals("2021-03-26T17:30Z[UTC]", result.getPostDate().toString());
-		assertTrue(result.getRetweets() > 7500);
+		assertTrue(result.getRetweets() > 7000);
 		assertTrue(result.getLikes() >= 78000);
 	}
 	
@@ -77,7 +77,7 @@ class ScraperTests {
 				+ "\n"
 				+ "Mark your calendars to join us on http://twitch.tv/twitterdev Thursday March 18th, 10AM PT/ 1PM ET.", result.getContent());
 		assertEquals("Twitter Web App", result.getDevice());
-		assertEquals("", result.getPostDate());
+		assertEquals("2021-04-23T04:00Z[UTC]", result.getPostDate());
 		assertTrue(result.getLikes() > 30);
 		assertTrue(result.getRetweets() > 7);
 	}
@@ -86,6 +86,18 @@ class ScraperTests {
 	@Test
 	void imageTweet() throws IOException {
 		Tweet result = scraper.getTweetFromURL("https://twitter.com/GoogleDoodles/status/1385443314523115520");
+		
+		assertEquals("Today’s #GoogleDoodle celebrates Ñ—not only a letter but a representation of Hispanic heritage.\n"
+				+ "\n"
+				+ "#Didyouknow? To save time & shorten words, 12th-century scribes wrote a tiny \"n\" (a tilde or virgulilla) on top to create Ñ ✍️\n"
+				+ "\n"
+				+ "🎨 by guest artist @min_wins→ http://goo.gle/3uLtSmD", result.getContent());
+		assertEquals("Sprinklr", result.getDevice());
+		assertEquals("2021-04-23T04:00Z[UTC]", result.getPostDate().toString());
+		assertEquals(result.getImageurls().size(), 1);
+		assertTrue(result.getImageurls().get(0).contains("EzoVWh8WQAQE7ir"));
+		assertTrue(result.getRetweets() > 170);
+		assertTrue(result.getLikes() > 800);
 	}
 	
 	@Tag("Account")

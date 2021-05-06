@@ -109,6 +109,8 @@ public class Scraper {
 		
 		out.setAuthor(this.getAccountInfo(author));
 		
+		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")));
+		
 		return out;
 	}
 	
@@ -135,6 +137,8 @@ public class Scraper {
 		out.setBio(
 				parser.parseTweet(accountelement.findElement(By.xpath(baseXpath + "/div/div[3]/div/div")).getText()));
 		
+		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")));
+		
 		return out;
 	}
 	
@@ -147,17 +151,19 @@ public class Scraper {
 		WebElement searchelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
 		List<WebElement> ses = searchelement.findElements(By.xpath("//article//time/..[@href]"));
 		ArrayList<String> hrefs = new ArrayList<String>();
-		System.out.println(ses.size());
 		
 		for(WebElement i : ses) {
-			System.out.println(i.getAttribute("href"));
 			hrefs.add(i.getAttribute("href"));
 		}
 		
-		for(String tweeturl : hrefs) {
-			System.out.println(tweeturl + " done");
-			out.add(this.getTweetFromURL(tweeturl));
+		System.out.println("(0/" + hrefs.size() + ") got " + hrefs.size() + " tweet urls");
+		
+		for(int i = 0; i < hrefs.size(); i++) {
+			out.add(this.getTweetFromURL(hrefs.get(i)));
+			System.out.println("(" + (i + 1) + "/" + hrefs.size() + ") " + hrefs.get(i) + " done");
 		}
+		
+		System.out.println("done");
 		
 		return out;
 	}

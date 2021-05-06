@@ -14,6 +14,7 @@ public class Tweet implements Serializable {
 	private ZonedDateTime postDate; // timezone is always UTC, convert as needed
 	private String device;
 	private boolean isRetweet = false;
+	private ZonedDateTime fetchDate;
 
 	public String getContent() {
 		return content;
@@ -68,5 +69,11 @@ public class Tweet implements Serializable {
 	}
 	public void setRetweet(boolean isRetweet) {
 		this.isRetweet = isRetweet;
+	}
+	public ZonedDateTime getFetchDate() {
+		return fetchDate;
+	}
+	public void setFetchDate(ZonedDateTime fetchDate) {
+		this.fetchDate = fetchDate;
 	}
 }

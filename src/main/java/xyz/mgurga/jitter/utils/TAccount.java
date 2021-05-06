@@ -2,6 +2,7 @@ package xyz.mgurga.jitter.utils;
 
 import java.io.Serializable;
 import java.net.URL;
+import java.time.ZonedDateTime;
 
 public class TAccount implements Serializable {
 	private String handle;
@@ -11,6 +12,7 @@ public class TAccount implements Serializable {
 	private String headerUrl;
 	private int following;
 	private int followers;
+	private ZonedDateTime fetchDate;
 	
 	public TAccount() {}
 	public TAccount(String handle) {
@@ -58,5 +60,11 @@ public class TAccount implements Serializable {
 	}
 	public void setHeaderUrl(String headerUrl) {
 		this.headerUrl = headerUrl;
+	}
+	public ZonedDateTime getFetchDate() {
+		return fetchDate;
+	}
+	public void setFetchDate(ZonedDateTime fetchDate) {
+		this.fetchDate = fetchDate;
 	}
 }

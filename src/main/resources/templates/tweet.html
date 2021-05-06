@@ -11,6 +11,11 @@
     <div id="middle">
         <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
         <h3 th:utext="${tweet.content}"></h3>
+        <div class="tweetimgs">
+            <tr th:each="imgurl : ${tweet.imageurls}">
+                <img th:src="${imgurl}" />
+            </tr>
+        </div>
         <table style="table-layout: fixed; width:100%; text-align: center;">
             <tr>
                 <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
@@ -26,6 +31,10 @@
         margin: auto;
         width: 75%;
         border: 1px solid grey;
+    }
+    
+    .tweetimgs > * {
+        width: 50%;
     }
 </style>
 </html>

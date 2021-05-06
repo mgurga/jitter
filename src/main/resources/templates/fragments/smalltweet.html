@@ -4,11 +4,18 @@
         <div class="smalltweet">
             <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
             <h4 class="smalltweetcontent" th:utext="${tweet.content}" />
+            <div class="tweetimgs" style="margin-top: 10px;">
+                <tr th:each="imgurl : ${tweet.imageurls}">
+                    <img th:src="${imgurl}" />
+                </tr>
+            </div>
             <table style="table-layout: fixed; width:100%; text-align: center; margin-top: 5px; margin-bottom: 5px;">
                 <tr>
                     <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
-                    <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
                     <td>Post Date: <th:block th:utext="${tweet.postDate}"/></td>
+                </tr>
+                <tr>
+                    <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
                     <td>Device: <th:block th:utext="${tweet.device}"/></td>
                 </tr>
             </table>
@@ -17,6 +24,11 @@
             .smalltweetcontent {
                 margin-top: 0;
                 margin-bottom: 0;
+            }
+            
+            .tweetimgs > * {
+                width: 23%;
+                max-height: 100px;
             }
         </style>
     </div>

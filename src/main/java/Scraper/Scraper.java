@@ -87,6 +87,16 @@ public class Scraper {
 			return getTweet(author, id);
 		}
 		
+		List<WebElement> tweetimgs = tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-3]//img"));
+		ArrayList<String> imgurls = new ArrayList<String>();
+		for(WebElement imgele : tweetimgs) {
+			String rawurl = imgele.getAttribute("src");
+			rawurl = rawurl.replace("name=small", "name=large");
+			rawurl = rawurl.replace("format=jpg", "format=png");
+			imgurls.add(rawurl);
+		}
+		out.setImageurls(imgurls);
+		
 		String rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]")).getText();
 		rawdatestr = rawdatestr.replace("· ", "");
 		DateTimeFormatter twittertimeformat = DateTimeFormatter.ofPattern("h:mm a MMM d, uuuu");

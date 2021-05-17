@@ -1,10 +1,21 @@
 package xyz.mgurga.jitter.utils;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.time.ZonedDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
+import javax.persistence.Id;
+
+@Entity
 public class TAccount implements Serializable {
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	Long id;
+
 	private String handle;
 	private String nickname;
 	private String bio;

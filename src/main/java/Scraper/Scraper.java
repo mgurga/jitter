@@ -65,6 +65,8 @@ public class Scraper {
 		WebElement tweetelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
 		String baseXpath = "//article/div/div/div";
 		
+		out.setId(id);
+		
 		out.setContent(parser.parseTweet(
 				tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div/div")).getText()));
 		
@@ -108,6 +110,7 @@ public class Scraper {
 		out.setDevice(postdevice);
 		
 		out.setAuthor(this.getAccountInfo(author));
+		out.setHandle(author);
 		
 		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")));
 		

@@ -34,7 +34,7 @@ public class Scraper {
 		wait = new WebDriverWait(driver, 20);
 	}
 	
-	public Tweet getTweetFromURL(String url) throws IOException {
+	public String[] getInfoFromURL(String url) throws IOException {
 		String author = null;
 		String id = null;
 		String[] urlparts = url.split("/");
@@ -53,7 +53,13 @@ public class Scraper {
 		if(id == null)
 			throw new IOException("could not decode id");
 		
-		return this.getTweet(author, id);
+		String[] out = {author, id};
+		return out;
+	}
+	
+	public Tweet getTweetFromURL(String url) throws IOException {
+		String[] info = getInfoFromURL(url);
+		return this.getTweet(info[0], info[1]);
 	}
 	
 	public Tweet getTweet(String author, String id) throws IOException {
@@ -167,6 +173,23 @@ public class Scraper {
 		}
 		
 		System.out.println("done");
+		
+		return out;
+	}
+	
+	public ArrayList<String[]> getAccountTweetLinks(String handle) throws IOException {
+		String searchurl = this.twitterurl + "/search?q=from:" + handle + " -filter:replies&src=typed_query&f=live";
+		ArrayList<String[]> out = new ArrayList<>();
+		
+		driver.get(searchurl);
+		
+		WebElement searchelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
+		List<WebElement> ses = searchelement.findElements(By.xpath("//article//time/..[@href]"));
+		
+		for(WebElement a : ses) {
+			String url = a.getAttribute("href");
+			out.add(this.getInfoFromURL(url));
+		}
 		
 		return out;
 	}

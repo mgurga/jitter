@@ -44,19 +44,19 @@ public class JitterApplication {
 	@GetMapping(value="/{handle}")
 	public String account(@PathVariable String handle, Model model) throws IOException {
 		model.addAttribute("fas", defaultaccounts);
-		model.addAttribute("account", scraper.getAccountInfo(handle));
-		model.addAttribute("acctweets", scraper.getAccountTweets(handle));
+		model.addAttribute("account", getTAcc(handle));
+		model.addAttribute("acctweets", getAccTwts(handle));
 		return "account.html";
 	}
 	
 	@GetMapping(value="/{handle}/status/{id}")
 	public String singleTweet(@PathVariable String handle, @PathVariable String id, Model model) throws IOException {
 		model.addAttribute("fas", defaultaccounts);
-		model.addAttribute("tweet", getTweet(handle, id));
+		model.addAttribute("tweet", getTwt(handle, id));
 		return "tweet.html";
 	}
 	
-	public Tweet getTweet(String handle, String id) throws IOException {
+	public Tweet getTwt(String handle, String id) throws IOException {
 		if(!(tweetRepository == null)) {
 			for (Tweet existingTweet : tweetRepository.findAll())
 				if(existingTweet.getHandle().equals(handle) && existingTweet.getId().equals(id)) {
@@ -86,6 +86,20 @@ public class JitterApplication {
 			return out;
 		} else {
 			TAccount out = scraper.getAccountInfo(handle);
+			return out;
+		}
+	}
+	
+	public ArrayList<Tweet> getAccTwts(String handle) throws IOException {
+		if(!(tweetRepository == null)) {
+			ArrayList<Tweet> out = new ArrayList<>();
+			ArrayList<String[]> tweetsinfo = scraper.getAccountTweetLinks(handle);
+			for(String[] i : tweetsinfo) {
+				out.add(getTwt(i[0], i[1]));
+			}
+			return out;
+		} else {
+			ArrayList<Tweet> out = scraper.getAccountTweets(handle);
 			return out;
 		}
 	}

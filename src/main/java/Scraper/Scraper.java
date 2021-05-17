@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -131,8 +132,10 @@ public class Scraper {
 		driver.get(accounturl);
 		
 		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
-		WebElement accountelement = wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(By.tagName("article"), By.xpath(baseXpath + "/div")));
-		
+		WebElement accountelement = null;
+		try {
+			accountelement = wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(By.tagName("article"), By.xpath(baseXpath + "/div")));
+		} catch(NoSuchElementException e) {}
 		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div/div[2]/div/div/div")).getText());
 		
 		out.setAvatarUrl(accountelement.findElement(By.xpath(baseXpath + "/div/div[1]//img")).getAttribute("src"));

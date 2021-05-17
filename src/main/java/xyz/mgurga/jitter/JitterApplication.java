@@ -3,6 +3,10 @@ package xyz.mgurga.jitter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,20 +29,38 @@ public class JitterApplication {
 	@Autowired
 	TAccountRepository taccountRepository;
 	
-	static ArrayList<TAccount> defaultaccounts = new ArrayList<TAccount>();
+	private static final Logger log = LoggerFactory.getLogger(JitterApplication.class);
+	static ArrayList<TAccount> defaultaccounts = new ArrayList<>();
 	Scraper scraper = new Scraper();
 	
 	public static void main(String[] args) {
-		defaultaccounts.add(new TAccount("Twitter"));
-		defaultaccounts.add(new TAccount("Google"));
-		defaultaccounts.add(new TAccount("Android"));
 		SpringApplication.run(JitterApplication.class, args);
 	}
 	
+	@PostConstruct
+	public void setup() {
+		if(tweetRepository == null)
+			log.warn("tweet repository failed to autowire");
+		if(taccountRepository == null)
+			log.warn("taccount repository failed to autowire");
+		
+		String[] accs = {"Twitter", "Google", "Android"};
+		for(int i = 0; i < accs.length; i++) {
+			log.info("(" + (i + 1) + "/" + accs.length + ") loading default account: @" + accs[i]);
+			defaultaccounts.add(getTAcc(accs[i]));
+		}
+		log.info("successfully loaded default accounts");
+	}
+	
 	@GetMapping(value="/home")
-	public String home(Model model) {
+	public String home(Model model) throws IOException {
 		model.addAttribute("fas", defaultaccounts);
-		return "home.html";
+		ArrayList<Tweet> out = new ArrayList<>();
+		for(TAccount acc : defaultaccounts) {
+			out.addAll(getAccTwts(acc.getHandle()));
+		}
+		model.addAttribute("tweets", out);
+		return "timeline.html";
 	}
 	
 	@GetMapping(value="/{handle}")
@@ -60,7 +82,6 @@ public class JitterApplication {
 		if(!(tweetRepository == null)) {
 			for (Tweet existingTweet : tweetRepository.findAll())
 				if(existingTweet.getHandle().equals(handle) && existingTweet.getId().equals(id)) {
-					System.out.println("loaded cached tweet");
 					existingTweet.setAuthor(getTAcc(handle));
 					return existingTweet;
 				}
@@ -94,6 +115,7 @@ public class JitterApplication {
 		if(!(tweetRepository == null)) {
 			ArrayList<Tweet> out = new ArrayList<>();
 			ArrayList<String[]> tweetsinfo = scraper.getAccountTweetLinks(handle);
+			log.info("loading " + tweetsinfo.size() + " tweets from @" + handle);
 			for(String[] i : tweetsinfo) {
 				out.add(getTwt(i[0], i[1]));
 			}

@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Home</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div th:replace="fragments/favoriteaccounts :: accounts" />
+    
+    <div class="middle">
+        <tr th:each="twt : ${tweets}">
+            <div class="smalltweetcontainer">
+                <div th:replace="fragments/smalltweet :: small(${twt})" />
+            </div>
+        </tr>
+    </div>
+</body>
+<style>
+    .middle {
+        margin: auto;
+        width: 75%;
+        border: 1px solid grey;
+    }
+    
+    .smalltweetcontainer {
+        border-top: 1px solid #222222;
+        border-bottom: 1px solid #222222;
+    }
+</style>
+</html>

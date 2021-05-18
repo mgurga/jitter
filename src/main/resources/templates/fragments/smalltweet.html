@@ -3,6 +3,7 @@
     <div th:fragment="small(tweet)">
         <div class="smalltweet">
             <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
+            <span th:if="${tweet.retweet}" style="font-style: italic; color: grey;">Retweeted:</span>
             <h4 class="smalltweetcontent" th:utext="${tweet.content}" />
             <div class="tweetimgs" style="margin-top: 10px;">
                 <tr th:each="imgurl : ${tweet.imageurls}">

@@ -96,13 +96,18 @@ public class Scraper {
 			return getTweet(author, id);
 		}
 		
+		out.setRetweet(false);
+		
 		List<WebElement> tweetimgs = tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-3]//img"));
 		ArrayList<String> imgurls = new ArrayList<String>();
 		for(WebElement imgele : tweetimgs) {
 			String rawurl = imgele.getAttribute("src");
 			rawurl = rawurl.replace("name=small", "name=large");
 			rawurl = rawurl.replace("format=jpg", "format=png");
-			imgurls.add(rawurl);
+			if(rawurl.contains("/profile_images/"))
+				out.setRetweet(true);
+			if(!rawurl.contains("/emoji/") && !rawurl.contains("/profile_images/"))
+				imgurls.add(rawurl);
 		}
 		out.setImageurls(imgurls);
 		

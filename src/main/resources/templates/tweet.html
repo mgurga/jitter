@@ -10,6 +10,7 @@
     
     <div id="middle">
         <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
+        <span th:if="${tweet.retweet}" style="font-style: italic; color: grey;">Retweeted:</span>
         <h3 th:utext="${tweet.content}"></h3>
         <div class="tweetimgs">
             <tr th:each="imgurl : ${tweet.imageurls}">

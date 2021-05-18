@@ -73,7 +73,6 @@ public class JitterApplication {
 		log.info(handles);
 		String[] handlelist = handles.split(",");
 		for(String acc : handlelist) {
-			log.info("getting: " + acc);
 			out.addAll(getAccTwts(acc));
 		}
 		Collections.sort(out, Comparator.comparing(Tweet::getPostDate).reversed());
@@ -105,11 +104,13 @@ public class JitterApplication {
 				}
 			
 			Tweet out = scraper.getTweet(handle, id);
+			out.setContent(out.getContent().replace("\n", "<br />"));
 			tweetRepository.save(out);
 			taccountRepository.save(out.getAuthor());
 			return out;
 		} else {
 			Tweet out = scraper.getTweet(handle, id);
+			out.setContent(out.getContent().replace("\n", "<br />"));
 			return out;
 		}
 	}

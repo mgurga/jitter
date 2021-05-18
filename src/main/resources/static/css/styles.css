@@ -1,8 +1,53 @@
 html {
     background-color: #111111;
     color: white;
+    font-family: monospace !important;
 }
 
 .favoriteaccount {
     color: white;
+}
+
+.avatartext > * {
+    display: inline-block;
+}
+
+.avatarimg {
+    height: 50px;
+}
+
+.textcontent {
+    vertical-align: top;
+}
+
+.accountnick {
+    margin: 0;
+    color: white;
+}
+
+.accounthandle {
+    color: grey;
+    margin: 0;
+}
+
+.middle {
+    margin: auto;
+    width: 75%;
+    border: 1px solid grey;
+}
+
+.smalltweetcontainer {
+    border-top: 1px solid #222222;
+    border-bottom: 1px solid #222222;
+}
+
+.smalltweetcontent {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: white;
+}
+
+.tweetimgs > * {
+    max-width: 23%;
+    max-height: 200px;
 }

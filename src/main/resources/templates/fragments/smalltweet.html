@@ -4,7 +4,9 @@
         <div class="smalltweet">
             <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
             <span th:if="${tweet.retweet}" style="font-style: italic; color: grey;">Retweeted:</span>
-            <h4 class="smalltweetcontent" th:utext="${tweet.content}" />
+            <a style="text-decoration: none;" th:href="@{'/' + ${tweet.author.handle} + '/status/' + ${tweet.id}}">
+                <h4 class="smalltweetcontent" th:utext="${tweet.content}" />
+            </a>
             <div class="tweetimgs" style="margin-top: 10px;">
                 <tr th:each="imgurl : ${tweet.imageurls}">
                     <img th:src="${imgurl}" />
@@ -21,16 +23,5 @@
                 </tr>
             </table>
         </div>
-        <style>
-            .smalltweetcontent {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-            
-            .tweetimgs > * {
-                max-width: 23%;
-                max-height: 200px;
-            }
-        </style>
     </div>
 </html>

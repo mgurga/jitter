@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +18,8 @@ public class Tweet implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	Long id;
-
+	
+	@Column(columnDefinition = "text")
 	private String content;
 	private int likes;
 	private int retweets;
@@ -25,6 +27,7 @@ public class Tweet implements Serializable {
 	private TAccount author;
 	private String handle;
 	private String tid;
+	@Column(columnDefinition = "text")
 	private ArrayList<String> imageurls;
 	private ArrayList<String> links;
 	private ZonedDateTime postDate; // timezone is always UTC, convert as needed

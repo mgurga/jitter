@@ -2,6 +2,8 @@ package xyz.mgurga.jitter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.annotation.PostConstruct;
 
@@ -59,6 +61,22 @@ public class JitterApplication {
 		for(TAccount acc : defaultaccounts) {
 			out.addAll(getAccTwts(acc.getHandle()));
 		}
+		Collections.sort(out, Comparator.comparing(Tweet::getPostDate).reversed());
+		model.addAttribute("tweets", out);
+		return "timeline.html";
+	}
+	
+	@GetMapping(value="/multi/{handles}")
+	public String multi(@PathVariable String handles, Model model) throws IOException {
+		model.addAttribute("fas", defaultaccounts);
+		ArrayList<Tweet> out = new ArrayList<>();
+		log.info(handles);
+		String[] handlelist = handles.split(",");
+		for(String acc : handlelist) {
+			log.info("getting: " + acc);
+			out.addAll(getAccTwts(acc));
+		}
+		Collections.sort(out, Comparator.comparing(Tweet::getPostDate).reversed());
 		model.addAttribute("tweets", out);
 		return "timeline.html";
 	}

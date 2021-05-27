@@ -2,7 +2,7 @@
 <html>
     <div th:fragment="thin(account)">
         <div style="width: 100%;">
-            <a th:href="@{'/' + ${account.handle}}">
+            <a th:href="@{'/' + ${account.handle}}" style="text-decoration: none;">
                 <div class="avatartext">
                     <img class="avatarimg" th:src="${account.avatarUrl}" />
                     <div class="textcontent">

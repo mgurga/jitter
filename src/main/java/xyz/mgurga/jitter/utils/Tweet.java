@@ -34,6 +34,7 @@ public class Tweet implements Serializable {
 	private String device;
 	private boolean isRetweet = false;
 	private ZonedDateTime fetchDate;
+	private boolean isReply = false;
 
 	public String getContent() {
 		return content;
@@ -129,5 +130,13 @@ public class Tweet implements Serializable {
 
 	public void setHandle(String handle) {
 		this.handle = handle;
+	}
+
+	public boolean isReply() {
+		return isReply;
+	}
+
+	public void setReply(boolean isReply) {
+		this.isReply = isReply;
 	}
 }

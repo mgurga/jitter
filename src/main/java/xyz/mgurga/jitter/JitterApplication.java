@@ -54,6 +54,11 @@ public class JitterApplication {
 		log.info("successfully loaded default accounts");
 	}
 	
+	@GetMapping(value="/")
+	public String base() {
+		return "redirect:/home";
+	}
+	
 	@GetMapping(value="/home")
 	public String home(Model model) throws IOException {
 		model.addAttribute("fas", defaultaccounts);
@@ -92,6 +97,13 @@ public class JitterApplication {
 	public String singleTweet(@PathVariable String handle, @PathVariable String id, Model model) throws IOException {
 		model.addAttribute("fas", defaultaccounts);
 		model.addAttribute("tweet", getTwt(handle, id));
+		
+		ArrayList<Tweet> replies = new ArrayList<>();
+		for(String[] urlinfo : scraper.getTweetReplyLinks(handle, id)) {
+			replies.add(getTwt(urlinfo[0], urlinfo[1]));
+		}
+		model.addAttribute("replies", replies);
+		
 		return "tweet.html";
 	}
 	

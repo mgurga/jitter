@@ -30,7 +30,7 @@ html {
     margin: 0;
 }
 
-.middle {
+.middle, #middle {
     margin: auto;
     width: 75%;
     border: 1px solid grey;

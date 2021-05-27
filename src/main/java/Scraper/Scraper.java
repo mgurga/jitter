@@ -66,7 +66,7 @@ public class Scraper {
 	public Tweet getTweet(String author, String id) throws IOException {
 		String tweeturl = this.twitterurl + author + "/status/" + id;
 		Tweet out = new Tweet();
-		
+		System.out.println(author + "/status/" + id);
 		driver.get(tweeturl);
 		
 		WebElement tweetelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
@@ -80,7 +80,20 @@ public class Scraper {
 		// set likes and retweets, retry if parsing error
 		// TODO: Sometimes NumberFormatException error
 		try {
-			if(tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-1]/div//span[@style]")).size() == 2) {
+			if(tweetelement.findElements(By.xpath("(//article)[2]/div/div/div/div[3]/div[1]/div")).size() != 0) {
+				System.out.println("set basepath to second article");
+				baseXpath = "(//article)[2]/div/div/div";
+				if(tweetelement.findElements(By.xpath("(//article)[2]/div/div/div/div[last()]/div[last()]/div//span")).size() == 0) {
+					out.setRetweets(0);
+					out.setLikes(0);
+				} else {
+					out.setRetweets(parser.parseStr(
+							tweetelement.findElement(By.xpath("((//article)[2]/div/div/div/div/div[last()-1]//span[@style])[1]")).getText()));
+					out.setLikes(parser.parseStr(
+							tweetelement.findElement(By.xpath("((//article)[2]/div/div/div/div/div[last()-1]//span[@style])[2]")).getText()));
+				}
+				out.setReply(true);
+			} else if(tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-1]/div//span[@style]")).size() == 2) {
 				out.setRetweets(parser.parseStr(
 						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span)[1]")).getText()));
 				out.setLikes(parser.parseStr(
@@ -91,8 +104,10 @@ public class Scraper {
 				out.setLikes(parser.parseStr(
 						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span[@style])[3]")).getText()));
 			}
+		} catch(NoSuchElementException e) {
+			System.out.println("tweet info not found");
 		} catch(NumberFormatException n) {
-			System.out.println("problem parsing, trying again");
+			System.out.println("problem parsing tweet " + author + "/status/" + id + ", trying again");
 			return getTweet(author, id);
 		}
 		
@@ -111,14 +126,33 @@ public class Scraper {
 		}
 		out.setImageurls(imgurls);
 		
-		String rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]")).getText();
+		String rawdatestr;
+		//if(!(out.getLikes() == 0 && out.getRetweets() == 0))
+		try {
+			rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]")).getText();
+		} catch (NoSuchElementException n) {
+			System.out.println("trying second date element");
+			rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-1]//a[1]")).getText();
+		}
+//		else
+//			rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-1]//a[1]")).getText();
+		
 		rawdatestr = rawdatestr.replace("· ", "");
 		DateTimeFormatter twittertimeformat = DateTimeFormatter.ofPattern("h:mm a MMM d, uuuu");
 		LocalDateTime postdt = LocalDateTime.from(twittertimeformat.parse(rawdatestr));
 		ZonedDateTime zpostdt = ZonedDateTime.of(postdt, ZoneId.systemDefault());
 		out.setPostDate(zpostdt.withZoneSameInstant(ZoneId.of("UTC")));
 		
-		String postdevice = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[2]")).getText();
+		String postdevice;
+		//if(!out.isReply())
+		try {
+			postdevice = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[2]")).getText();
+		} catch(NoSuchElementException n) {
+			postdevice = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-1]//a[2]")).getText();
+		}
+		//else
+		//	postdevice = tweetelement.findElement(By.xpath("((//article)[2]/div/div/div/div[last()]/div[last()-2]//span)[1]")).getText();
+		
 		out.setDevice(postdevice);
 		
 		out.setAuthor(this.getAccountInfo(author));
@@ -129,13 +163,31 @@ public class Scraper {
 		return out;
 	}
 	
+	public ArrayList<String[]> getTweetReplyLinks(String author, String id) throws IOException {
+		String tweeturl = this.twitterurl + author + "/status/" + id + "?ref_src=twsrc";
+		ArrayList<String[]> out = new ArrayList<>();
+		
+		driver.get(tweeturl);
+		
+		WebElement searchelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
+		List<WebElement> ses = searchelement.findElements(By.xpath("//article//a[@aria-label]"));
+		
+		for(int i = 0; i < ses.size(); i++) {
+			if(i != 0 && i != ses.size()-1) {
+				String url = ses.get(i).getAttribute("href");
+				out.add(this.getInfoFromURL(url));
+			}
+		}
+		
+		return out;
+	}
+	
 	public TAccount getAccountInfo(String handle) {
 		String accounturl = this.twitterurl + handle;
 		TAccount out = new TAccount();
 		out.setHandle(handle);
 		
 		driver.get(accounturl);
-		
 		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
 		WebElement accountelement = null;
 		try {
@@ -144,7 +196,9 @@ public class Scraper {
 		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div/div[2]/div/div/div")).getText());
 		
 		out.setAvatarUrl(accountelement.findElement(By.xpath(baseXpath + "/div/div[1]//img")).getAttribute("src"));
-		out.setHeaderUrl(accountelement.findElement(By.xpath(baseXpath + "/a/div/div[2]//img")).getAttribute("src"));
+		try {
+			out.setHeaderUrl(accountelement.findElement(By.xpath(baseXpath + "/a/div/div[2]//img")).getAttribute("src"));
+		} catch(NoSuchElementException n) {}
 		
 		out.setFollowing(
 				parser.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div/div[last()]/div//span[1]")).getText()));

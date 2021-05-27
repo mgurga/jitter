@@ -8,34 +8,42 @@
 <body>
     <div th:replace="fragments/favoriteaccounts :: accounts" />
     
-    <div id="middle">
-        <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
-        <span th:if="${tweet.retweet}" style="font-style: italic; color: grey;">Retweeted:</span>
-        <h3 th:utext="${tweet.content}"></h3>
-        <div class="tweetimgs">
-            <tr th:each="imgurl : ${tweet.imageurls}">
-                <img th:src="${imgurl}" />
+    <div class="middle">
+        <div id="maintweet">
+            <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
+            <span th:if="${tweet.retweet}" style="font-style: italic; color: grey;">Retweeted:</span>
+            <h3 th:utext="${tweet.content}"></h3>
+            <div class="tweetimgs">
+                <tr th:each="imgurl : ${tweet.imageurls}">
+                    <img th:src="${imgurl}" />
+                </tr>
+            </div>
+            <table style="table-layout: fixed; width:100%; text-align: center;">
+                <tr>
+                    <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
+                    <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
+                    <td>Post Date: <th:block th:utext="${tweet.postDate}"/></td>
+                    <td>Device: <th:block th:utext="${tweet.device}"/></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br>
+    <div class="middle">
+        <div class="tweetreplies">
+            <tr th:each="rep : ${replies}">
+                <div th:replace="fragments/smalltweet :: small(${rep})" />
             </tr>
         </div>
-        <table style="table-layout: fixed; width:100%; text-align: center;">
-            <tr>
-                <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
-                <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
-                <td>Post Date: <th:block th:utext="${tweet.postDate}"/></td>
-                <td>Device: <th:block th:utext="${tweet.device}"/></td>
-            </tr>
-        </table>
     </div>
 </body>
 <style>
-    #middle {
-        margin: auto;
-        width: 75%;
-        border: 1px solid grey;
+    .tweetimgs > * {
+        width: 50% !important;
     }
     
-    .tweetimgs > * {
-        width: 50%;
+    .tweetreplies > * {
+        border-bottom: 1px solid gray;
     }
 </style>
 </html>

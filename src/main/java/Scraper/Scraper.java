@@ -74,9 +74,6 @@ public class Scraper {
 		
 		out.setId(id);
 		
-		out.setContent(parser.parseTweet(
-				tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div/div")).getText()));
-		
 		// set likes and retweets, retry if parsing error
 		// TODO: Sometimes NumberFormatException error
 		try {
@@ -104,6 +101,14 @@ public class Scraper {
 				out.setLikes(parser.parseStr(
 						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div[last()-1]/div//span[@style])[3]")).getText()));
 			}
+			
+			if(out.isReply()) {
+				out.setContent(parser.parseTweet(
+						tweetelement.findElement(By.xpath("(" + baseXpath + "/div[last()]/div/div)[2]")).getText()));
+			} else {
+				out.setContent(parser.parseTweet(
+						tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div/div")).getText()));
+			}
 		} catch(NoSuchElementException e) {
 			System.out.println("tweet info not found");
 		} catch(NumberFormatException n) {
@@ -127,15 +132,19 @@ public class Scraper {
 		out.setImageurls(imgurls);
 		
 		String rawdatestr;
-		//if(!(out.getLikes() == 0 && out.getRetweets() == 0))
-		try {
+		if(!out.isReply()) {
 			rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]")).getText();
-		} catch (NoSuchElementException n) {
-			System.out.println("trying second date element");
-			rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-1]//a[1]")).getText();
+		} else {
+			try {
+				rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]")).getText();
+				if(rawdatestr.equals("")) {
+					throw new NoSuchElementException("got link");
+				}
+			} catch (NoSuchElementException n) {
+				System.out.println("trying second date element");
+				rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-1]//a[1]")).getText();
+			}
 		}
-//		else
-//			rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-1]//a[1]")).getText();
 		
 		rawdatestr = rawdatestr.replace("· ", "");
 		DateTimeFormatter twittertimeformat = DateTimeFormatter.ofPattern("h:mm a MMM d, uuuu");

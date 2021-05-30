@@ -23,6 +23,7 @@ public class Tweet implements Serializable {
 	private String content;
 	private int likes;
 	private int retweets;
+	private int quotetweets;
 	@Transient
 	private TAccount author;
 	private String handle;
@@ -138,5 +139,13 @@ public class Tweet implements Serializable {
 
 	public void setReply(boolean isReply) {
 		this.isReply = isReply;
+	}
+
+	public int getQuoteTweets() {
+		return quotetweets;
+	}
+
+	public void setQuoteTweets(int quotetweets) {
+		this.quotetweets = quotetweets;
 	}
 }

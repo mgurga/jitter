@@ -182,7 +182,7 @@ public class Scraper {
 		List<WebElement> ses = searchelement.findElements(By.xpath("//article//a[@aria-label]"));
 		
 		for(int i = 0; i < ses.size(); i++) {
-			if(i != 0 && i != ses.size()-1) {
+			if(i != 0 && i <= 3) {
 				String url = ses.get(i).getAttribute("href");
 				out.add(this.getInfoFromURL(url));
 			}

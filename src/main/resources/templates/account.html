@@ -2,8 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head> 
     <title>@<th:block th:utext="${account.handle}"></title> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="/css/styles.css">
+    <th:block th:include="fragments/header :: header"></th:block>
 </head>
 <body>
     <div th:replace="fragments/favoriteaccounts :: accounts" />

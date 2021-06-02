@@ -2,9 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head> 
     <title>Timeline</title> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="/css/styles.css">
-    <script src="/js/common.js" defer></script>
+    <th:block th:include="fragments/header :: header"></th:block>
 </head>
 <body>
     <div th:replace="fragments/favoriteaccounts :: accounts" />

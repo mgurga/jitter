@@ -1,8 +1,8 @@
 package xyz.mgurga.jitter.utils;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +15,8 @@ import javax.persistence.Transient;
 @Entity
 public class Tweet implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	Long id;
@@ -23,18 +25,19 @@ public class Tweet implements Serializable {
 	private String content;
 	private int likes;
 	private int retweets;
-	private int quotetweets;
+	private int quoteTweets;
 	@Transient
 	private TAccount author;
 	private String handle;
 	private String tid;
+	private int replyNumber;
 	@Column(columnDefinition = "text")
-	private ArrayList<String> imageurls;
-	private ArrayList<String> links;
-	private ZonedDateTime postDate; // timezone is always UTC, convert as needed
+	private String imageurls; // converted to ArrayList and back, comma separated
+	private String links; // converted to ArrayList and back, comma separated
+	private String postDate; // timezone is always UTC, convert as needed
 	private String device;
 	private boolean isRetweet = false;
-	private ZonedDateTime fetchDate;
+	private String fetchDate; // timezone is always UTC, convert as needed
 	private boolean isReply = false;
 
 	public String getContent() {
@@ -69,20 +72,20 @@ public class Tweet implements Serializable {
 		this.author = author;
 	}
 
-	public ZonedDateTime getPostDate() {
+	public String getPostDate() {
 		return postDate;
 	}
 
-	public void setPostDate(ZonedDateTime postDate) {
+	public void setPostDate(String postDate) {
 		this.postDate = postDate;
 	}
 
 	public ArrayList<String> getImageurls() {
-		return imageurls;
+		return new ArrayList<String>(Arrays.asList(this.imageurls.split(", ")));
 	}
 
-	public void setImageurls(ArrayList<String> imageurls) {
-		this.imageurls = imageurls;
+	public void setImageurls(ArrayList<String> imageurlslist) {
+		this.imageurls = String.join(", ", imageurlslist);
 	}
 
 	public String getDevice() {
@@ -94,11 +97,11 @@ public class Tweet implements Serializable {
 	}
 
 	public ArrayList<String> getLinks() {
-		return links;
+		return new ArrayList<String>(Arrays.asList(this.links.split(", ")));
 	}
 
-	public void setLinks(ArrayList<String> links) {
-		this.links = links;
+	public void setLinks(ArrayList<String> linkslist) {
+		this.links = String.join(", ", linkslist);
 	}
 
 	public boolean isRetweet() {
@@ -109,11 +112,11 @@ public class Tweet implements Serializable {
 		this.isRetweet = isRetweet;
 	}
 
-	public ZonedDateTime getFetchDate() {
+	public String getFetchDate() {
 		return fetchDate;
 	}
 
-	public void setFetchDate(ZonedDateTime fetchDate) {
+	public void setFetchDate(String fetchDate) {
 		this.fetchDate = fetchDate;
 	}
 
@@ -142,10 +145,18 @@ public class Tweet implements Serializable {
 	}
 
 	public int getQuoteTweets() {
-		return quotetweets;
+		return quoteTweets;
 	}
 
 	public void setQuoteTweets(int quotetweets) {
-		this.quotetweets = quotetweets;
+		this.quoteTweets = quotetweets;
+	}
+
+	public int getReplyNumber() {
+		return replyNumber;
+	}
+
+	public void setReplyNumber(int replyNumber) {
+		this.replyNumber = replyNumber;
 	}
 }

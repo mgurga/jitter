@@ -1,7 +1,6 @@
 package xyz.mgurga.jitter.utils;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +10,8 @@ import javax.persistence.Id;
 
 @Entity
 public class TAccount implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -23,7 +24,7 @@ public class TAccount implements Serializable {
 	private String headerUrl;
 	private int following;
 	private int followers;
-	private ZonedDateTime fetchDate;
+	private String fetchDate;
 	
 	public TAccount() {}
 	public TAccount(String handle) {
@@ -72,10 +73,10 @@ public class TAccount implements Serializable {
 	public void setHeaderUrl(String headerUrl) {
 		this.headerUrl = headerUrl;
 	}
-	public ZonedDateTime getFetchDate() {
+	public String getFetchDate() {
 		return fetchDate;
 	}
-	public void setFetchDate(ZonedDateTime fetchDate) {
+	public void setFetchDate(String fetchDate) {
 		this.fetchDate = fetchDate;
 	}
 }

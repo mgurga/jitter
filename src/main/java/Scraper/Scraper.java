@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -77,11 +78,21 @@ public class Scraper {
 		// set likes and retweets, retry if parsing error
 		// TODO: Sometimes NumberFormatException error
 		try {
-			// check if tweet is a reply or not
-			if (tweetelement.findElements(By.xpath("(//article)[2]/div/div/div/div[3]/div[1]/div")).size() != 0) {
-				System.out.println("set basepath to second article");
-				baseXpath = "(//article)[2]/div/div/div";
-				out.setReply(true);
+			// check if tweet is a reply and which level reply
+			WebElement targetarticle = tweetelement
+					.findElement(By.xpath("//article/div/div/div/div/div[last()][@role]/../../../../.."));
+			List<WebElement> allarticles = tweetelement.findElements(By.xpath("//article"));
+			for (int i = 0; i < allarticles.size(); i++) {
+				if (allarticles.get(i).getAttribute("class").equals(targetarticle.getAttribute("class"))) {
+					System.out.println("set basepath to article #" + (i));
+					out.setReplyNumber(i);
+					if (i >= 1) {
+						baseXpath = "(//article)[" + (i + 1) + "]/div/div/div";
+						out.setReply(true);
+					} else {
+						baseXpath = "//article/div/div/div";
+					}
+				}
 			}
 
 			// get tweet metrics such as likes, retweets, and quote tweets
@@ -126,13 +137,17 @@ public class Scraper {
 		List<WebElement> tweetimgs = tweetelement.findElements(By.xpath(baseXpath + "/div[last()]/div[last()-3]//img"));
 		ArrayList<String> imgurls = new ArrayList<String>();
 		for (WebElement imgele : tweetimgs) {
-			String rawurl = imgele.getAttribute("src");
-			rawurl = rawurl.replace("name=small", "name=large");
-			rawurl = rawurl.replace("format=jpg", "format=png");
-			if (rawurl.contains("/profile_images/"))
-				out.setRetweet(true);
-			if (!rawurl.contains("/emoji/") && !rawurl.contains("/profile_images/"))
-				imgurls.add(rawurl);
+			try {
+				String rawurl = imgele.getAttribute("src");
+				rawurl = rawurl.replace("name=small", "name=large");
+				rawurl = rawurl.replace("format=jpg", "format=png");
+				if (rawurl.contains("/profile_images/"))
+					out.setRetweet(true);
+				if (!rawurl.contains("/emoji/") && !rawurl.contains("/profile_images/"))
+					imgurls.add(rawurl);
+			} catch(StaleElementReferenceException s) {
+				System.out.println("caught stale tweet image");
+			}
 		}
 		out.setImageurls(imgurls);
 
@@ -157,7 +172,7 @@ public class Scraper {
 		DateTimeFormatter twittertimeformat = DateTimeFormatter.ofPattern("h:mm a MMM d, uuuu");
 		LocalDateTime postdt = LocalDateTime.from(twittertimeformat.parse(rawdatestr));
 		ZonedDateTime zpostdt = ZonedDateTime.of(postdt, ZoneId.systemDefault());
-		out.setPostDate(zpostdt.withZoneSameInstant(ZoneId.of("UTC")));
+		out.setPostDate(zpostdt.withZoneSameInstant(ZoneId.of("UTC")).toString());
 
 		String postdevice;
 		try {
@@ -171,13 +186,18 @@ public class Scraper {
 		out.setAuthor(this.getAccountInfo(author));
 		out.setHandle(author);
 
-		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")));
+		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")).toString());
 
 		return out;
 	}
 
-	public ArrayList<String[]> getTweetReplyLinks(String author, String id) throws IOException {
-		String tweeturl = this.twitterurl + author + "/status/" + id + "?ref_src=twsrc";
+	public ArrayList<String[]> getTweetReplyLinks(Tweet tweet) throws IOException {
+		String tweeturl;
+		if (tweet.isReply()) {
+			tweeturl = this.twitterurl + tweet.getAuthor().getHandle() + "/status/" + tweet.getId() + "?ref_src=twsrc";
+		} else {
+			tweeturl = this.twitterurl + tweet.getAuthor().getHandle() + "/status/" + tweet.getId();
+		}
 		ArrayList<String[]> out = new ArrayList<>();
 
 		driver.get(tweeturl);
@@ -186,7 +206,8 @@ public class Scraper {
 		List<WebElement> ses = searchelement.findElements(By.xpath("//article//a[@aria-label]"));
 
 		for (int i = 0; i < ses.size(); i++) {
-			if (i != 0 && i <= 3) {
+			int maxreply = Math.min(3 + tweet.getReplyNumber(), ses.size());
+			if (i > tweet.getReplyNumber() && i <= maxreply) {
 				String url = ses.get(i).getAttribute("href");
 				out.add(this.getInfoFromURL(url));
 			}
@@ -225,7 +246,7 @@ public class Scraper {
 		out.setBio(
 				parser.parseTweet(accountelement.findElement(By.xpath(baseXpath + "/div/div[3]/div/div")).getText()));
 
-		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")));
+		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")).toString());
 
 		return out;
 	}

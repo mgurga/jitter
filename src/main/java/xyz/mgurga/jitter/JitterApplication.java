@@ -95,11 +95,12 @@ public class JitterApplication {
 	
 	@GetMapping(value="/{handle}/status/{id}")
 	public String singleTweet(@PathVariable String handle, @PathVariable String id, Model model) throws IOException {
+		Tweet tweet = getTwt(handle, id);
 		model.addAttribute("fas", defaultaccounts);
-		model.addAttribute("tweet", getTwt(handle, id));
+		model.addAttribute("tweet", tweet);
 		
 		ArrayList<Tweet> replies = new ArrayList<>();
-		for(String[] urlinfo : scraper.getTweetReplyLinks(handle, id)) {
+		for(String[] urlinfo : scraper.getTweetReplyLinks(tweet)) {
 			replies.add(getTwt(urlinfo[0], urlinfo[1]));
 		}
 		model.addAttribute("replies", replies);

@@ -4,6 +4,7 @@
     <title><th:block th:utext="${tweet.author.nickname}"/> tweeted "<th:block th:utext="${tweet.content}"/>"</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/common.js" defer></script>
 </head>
 <body>
     <div th:replace="fragments/favoriteaccounts :: accounts" />
@@ -22,7 +23,7 @@
                 <tr>
                     <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
                     <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
-                    <td>Post Date: <th:block th:utext="${tweet.postDate}"/></td>
+                    <td class="postdate">Post Date: <th:block th:utext="${tweet.postDate}"/></td>
                     <td>Device: <th:block th:utext="${tweet.device}"/></td>
                 </tr>
             </table>

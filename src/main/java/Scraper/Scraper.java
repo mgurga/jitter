@@ -31,6 +31,7 @@ public class Scraper {
 		FirefoxOptions options = new FirefoxOptions();
 		options.setHeadless(true);
 		options.addArguments("--window-size=1000,720");
+		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,"/dev/null");
 		// TODO: generate different (yet still compatible) useragents for each Scraper
 		driver = new FirefoxDriver(options);
 		wait = new WebDriverWait(driver, 20);
@@ -83,7 +84,7 @@ public class Scraper {
 					.findElement(By.xpath("//article/div/div/div/div/div[last()][@role]/../../../../.."));
 			List<WebElement> allarticles = tweetelement.findElements(By.xpath("//article"));
 			for (int i = 0; i < allarticles.size(); i++) {
-				if (allarticles.get(i).getAttribute("class").equals(targetarticle.getAttribute("class"))) {
+				if (allarticles.get(i).getAttribute("innerHTML").equals(targetarticle.getAttribute("innerHTML"))) {
 					System.out.println("set basepath to article #" + (i));
 					out.setReplyNumber(i);
 					if (i >= 1) {
@@ -220,13 +221,16 @@ public class Scraper {
 		String accounturl = this.twitterurl + handle;
 		TAccount out = new TAccount();
 		out.setHandle(handle);
-
+		System.out.println("getting @" + handle);
+		
+		if(handle.equals("favicon.ico"))
+			return null;
+		
 		driver.get(accounturl);
-		String baseXpath = "/html/body/div/div/div/div[2]/main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
+		String baseXpath = "//main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
 		WebElement accountelement = null;
 		try {
-			accountelement = wait.until(ExpectedConditions.presenceOfNestedElementLocatedBy(By.tagName("article"),
-					By.xpath(baseXpath + "/div")));
+			accountelement = wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("article")));
 		} catch (NoSuchElementException e) {
 		}
 		out.setNickname(accountelement.findElement(By.xpath(baseXpath + "/div/div[2]/div/div/div")).getText());

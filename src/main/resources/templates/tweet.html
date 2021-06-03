@@ -11,6 +11,11 @@
         <div id="maintweet">
             <div th:replace="fragments/thinaccount :: thin(${tweet.author})" />
             <span th:if="${tweet.retweet}" style="font-style: italic; color: grey;">Retweeted:</span>
+            <span th:if="${tweet.reply}" style="font-style: italic;">
+                <a th:href="${tweet.replyTo}" style="text-decoration: none; color: grey;">
+                    Replying to @<th:block th:utext="${#strings.arraySplit(tweet.replyTo, '/')[0]}" />
+                </a>
+            </span>
             <h3 style="margin-bottom: 0; margin-top: 10px; font-size: 16px;" th:utext="${tweet.content}"></h3>
             <tr th:each="imgurl : ${tweet.imageurls}">
                 <img class="bigtweetimgs" th:src="${imgurl}" />

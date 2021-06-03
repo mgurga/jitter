@@ -31,7 +31,7 @@ public class Scraper {
 		FirefoxOptions options = new FirefoxOptions();
 		options.setHeadless(true);
 		options.addArguments("--window-size=1000,720");
-		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,"/dev/null");
+		System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE, "/dev/null");
 		// TODO: generate different (yet still compatible) useragents for each Scraper
 		driver = new FirefoxDriver(options);
 		wait = new WebDriverWait(driver, 20);
@@ -60,12 +60,12 @@ public class Scraper {
 		return out;
 	}
 
-	public Tweet getTweetFromURL(String url) throws IOException {
+	public Tweet getTweetFromURL(String url, boolean getAuthor) throws IOException {
 		String[] info = getInfoFromURL(url);
-		return this.getTweet(info[0], info[1]);
+		return this.getTweet(info[0], info[1], getAuthor);
 	}
 
-	public Tweet getTweet(String author, String id) throws IOException {
+	public Tweet getTweet(String author, String id, boolean getAuthor) throws IOException {
 		String tweeturl = this.twitterurl + author + "/status/" + id;
 		Tweet out = new Tweet();
 		System.out.println(author + "/status/" + id);
@@ -89,7 +89,11 @@ public class Scraper {
 					out.setReplyNumber(i);
 					if (i >= 1) {
 						baseXpath = "(//article)[" + (i + 1) + "]/div/div/div";
+						String parentXpath = "(//article)[" + (i) + "]/div/div/div";
 						out.setReply(true);
+						out.setReplyTo(tweetelement.findElement(By.xpath(parentXpath + "//a[@aria-label]"))
+								.getAttribute("href").replace(this.twitterurl, "/"));
+						System.out.println("reply to: " + out.getReplyTo());
 					} else {
 						baseXpath = "//article/div/div/div";
 					}
@@ -130,7 +134,7 @@ public class Scraper {
 			System.out.println("tweet info not found, " + e.getMessage());
 		} catch (NumberFormatException n) {
 			System.out.println("problem parsing tweet " + author + "/status/" + id + ", trying again");
-			return getTweet(author, id);
+			return getTweet(author, id, true);
 		}
 
 		out.setRetweet(false);
@@ -146,7 +150,7 @@ public class Scraper {
 					out.setRetweet(true);
 				if (!rawurl.contains("/emoji/") && !rawurl.contains("/profile_images/"))
 					imgurls.add(rawurl);
-			} catch(StaleElementReferenceException s) {
+			} catch (StaleElementReferenceException s) {
 				System.out.println("caught stale tweet image");
 			}
 		}
@@ -154,7 +158,16 @@ public class Scraper {
 
 		String rawdatestr;
 		if (!out.isReply()) {
-			rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]")).getText();
+			try {
+				rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]"))
+						.getText();
+				if (rawdatestr.equals(""))
+					throw new NoSuchElementException("Date is empty");
+			} catch (NoSuchElementException n) {
+				System.out.println("trying second date element");
+				rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-1]//a[1]"))
+						.getText();
+			}
 		} else {
 			try {
 				rawdatestr = tweetelement.findElement(By.xpath(baseXpath + "/div[last()]/div[last()-2]//a[1]"))
@@ -183,8 +196,9 @@ public class Scraper {
 		}
 
 		out.setDevice(postdevice);
-
-		out.setAuthor(this.getAccountInfo(author));
+		
+		if(getAuthor)
+			out.setAuthor(this.getAccountInfo(author));
 		out.setHandle(author);
 
 		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")).toString());
@@ -222,10 +236,10 @@ public class Scraper {
 		TAccount out = new TAccount();
 		out.setHandle(handle);
 		System.out.println("getting @" + handle);
-		
-		if(handle.equals("favicon.ico"))
+
+		if (handle.equals("favicon.ico"))
 			return null;
-		
+
 		driver.get(accounturl);
 		String baseXpath = "//main/div/div/div/div[1]/div/div[2]/div/div/div[1]";
 		WebElement accountelement = null;
@@ -272,7 +286,7 @@ public class Scraper {
 		System.out.println("(0/" + hrefs.size() + ") got " + hrefs.size() + " tweet urls");
 
 		for (int i = 0; i < hrefs.size(); i++) {
-			out.add(this.getTweetFromURL(hrefs.get(i)));
+			out.add(this.getTweetFromURL(hrefs.get(i), true));
 			System.out.println("(" + (i + 1) + "/" + hrefs.size() + ") " + hrefs.get(i) + " done");
 		}
 

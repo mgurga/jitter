@@ -43,6 +43,7 @@ html {
 
 .smalltweetcontent {
     margin-top: 5px;
+    margin-bottom: 0;
     color: white;
     font-size: 14px;
 }

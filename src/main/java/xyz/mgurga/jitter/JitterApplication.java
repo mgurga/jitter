@@ -116,13 +116,14 @@ public class JitterApplication {
 					return existingTweet;
 				}
 			
-			Tweet out = scraper.getTweet(handle, id);
+			Tweet out = scraper.getTweet(handle, id, false);
 			out.setContent(out.getContent().replace("\n", "<br />"));
+			out.setAuthor(getTAcc(handle));
 			tweetRepository.save(out);
-			taccountRepository.save(out.getAuthor());
+			taccountRepository.save(getTAcc(handle));
 			return out;
 		} else {
-			Tweet out = scraper.getTweet(handle, id);
+			Tweet out = scraper.getTweet(handle, id, true);
 			out.setContent(out.getContent().replace("\n", "<br />"));
 			return out;
 		}

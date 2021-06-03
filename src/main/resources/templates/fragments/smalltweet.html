@@ -7,19 +7,27 @@
             <a style="text-decoration: none;" th:href="@{'/' + ${tweet.author.handle} + '/status/' + ${tweet.id}}">
                 <h4 class="smalltweetcontent" th:utext="${tweet.content}" />
             </a>
-            <div class="tweetimgs" style="margin-top: 10px;">
-                <tr th:each="imgurl : ${tweet.imageurls}">
-                    <img th:src="${imgurl}" />
-                </tr>
-            </div>
-            <table style="table-layout: fixed; width:100%; text-align: center; margin-top: 5px; margin-bottom: 5px;">
+            <tr th:each="imgurl : ${tweet.imageurls}">
+                <img class="tweetimgs" th:src="${imgurl}" />
+            </tr>
+            <table class="metrictable">
                 <tr>
-                    <td>Likes: <th:block th:utext="${tweet.likes}"/></td>
-                    <td class="postdate">Post Date: <th:block th:utext="${tweet.postDate}"/></td>
-                </tr>
-                <tr>
-                    <td>Retweets: <th:block th:utext="${tweet.retweets}"/></td>
-                    <td>Device: <th:block th:utext="${tweet.device}"/></td>
+                    <td>
+                        <img src="/icons/like.png" alt="Likes:" class="metricimg"/>
+                        <span class="metric"><th:block th:utext="${tweet.likes}" /></span>
+                    </td>
+                    <td>
+                        <img src="/icons/retweet.png" alt="Retweets:" class="metricimg"/>
+                        <span class="metric"><th:block th:utext="${tweet.retweets}" /></span>
+                    </td>
+                    <td>
+                        <img src="/icons/postdate.png" alt="Post Date:" class="metricimg"/>
+                        <span class="metric"><div class="postdate"><th:block th:utext="${tweet.postDate}" /></div></span>
+                    </td>
+                    <td>
+                        <img src="/icons/device.png" alt="Device:" class="metricimg"/>
+                        <span class="metric"><th:block th:utext="${tweet.device}" /></span>
+                    </td>
                 </tr>
             </table>
         </div>

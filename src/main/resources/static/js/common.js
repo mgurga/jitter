@@ -7,7 +7,6 @@ function convertTime(isodate) {
 }
 
 for(let post of document.getElementsByClassName("postdate")) {
-    var noPostDate = post.innerHTML.replace("Post Date: ", "");
-    var convertedTime = convertTime(noPostDate);
-    post.innerHTML = "Posted: " + convertedTime;
+    var convertedTime = convertTime(post.innerHTML);
+    post.innerHTML = convertedTime;
 }

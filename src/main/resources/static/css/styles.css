@@ -42,12 +42,26 @@ html {
 }
 
 .smalltweetcontent {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 5px;
     color: white;
+    font-size: 14px;
 }
 
-.tweetimgs > * {
+.tweetimgs {
     max-width: 23%;
     max-height: 200px;
+}
+
+.metrictable {
+    table-layout: fixed;
+    width:100%;
+    text-align: center;
+}
+
+.metric {
+    font-size: 14px;
+}
+
+.metricimg {
+    vertical-align: middle;
 }

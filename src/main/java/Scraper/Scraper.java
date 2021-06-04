@@ -196,8 +196,8 @@ public class Scraper {
 		}
 
 		out.setDevice(postdevice);
-		
-		if(getAuthor)
+
+		if (getAuthor)
 			out.setAuthor(this.getAccountInfo(author));
 		out.setHandle(author);
 
@@ -260,10 +260,14 @@ public class Scraper {
 				.parseStr(accountelement.findElement(By.xpath(baseXpath + "/div/div[last()]/div//span[1]")).getText()));
 		out.setFollowers(parser.parseStr(
 				accountelement.findElement(By.xpath(baseXpath + "/div/div[last()]/div[last()]//span[1]")).getText()));
-
-		out.setBio(
-				parser.parseTweet(accountelement.findElement(By.xpath(baseXpath + "/div/div[3]/div/div")).getText()));
-
+		
+		try {
+			out.setBio(
+					parser.parseTweet(accountelement.findElement(By.xpath(baseXpath + "/div/div[3]/div/div")).getText()));
+		} catch(NoSuchElementException n) {
+			out.setBio("");
+		}
+		
 		out.setFetchDate(ZonedDateTime.now(ZoneId.of("UTC")).toString());
 
 		return out;

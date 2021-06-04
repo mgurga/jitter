@@ -22,17 +22,17 @@
             </tr>
             <table class="metrictable">
                 <tr>
-                    <td>
+                    <td style="width: 15%;">
                         <img src="/icons/like.png" alt="Likes:" class="metricimg"/>
                         <span class="metric"><th:block th:utext="${tweet.likes}" /></span>
                     </td>
-                    <td>
+                    <td style="width: 15%;">
                         <img src="/icons/retweet.png" alt="Retweets:" class="metricimg"/>
                         <span class="metric"><th:block th:utext="${tweet.retweets}" /></span>
                     </td>
                     <td>
                         <img src="/icons/postdate.png" alt="Post Date:" class="metricimg"/>
-                        <span class="metric"><div class="postdate"><th:block th:utext="${tweet.postDate}" /></div></span>
+                        <span class="metric postdate"><th:block th:utext="${tweet.postDate}" /></span>
                     </td>
                     <td>
                         <img src="/icons/device.png" alt="Device:" class="metricimg"/>

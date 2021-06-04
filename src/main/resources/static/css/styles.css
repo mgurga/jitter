@@ -63,6 +63,15 @@ html {
     font-size: 14px;
 }
 
+.smallmetric {
+    font-size: 12px;
+}
+
 .metricimg {
     vertical-align: middle;
+}
+
+.smallmetricimg {
+    vertical-align: middle;
+    height: 12px;
 }

@@ -10,3 +10,8 @@ for(let post of document.getElementsByClassName("postdate")) {
     var convertedTime = convertTime(post.innerHTML);
     post.innerHTML = convertedTime;
 }
+
+for(let num of document.getElementsByClassName("largenum")) {
+    var compactNum = Intl.NumberFormat('en', { notation: 'compact' }).format(num.innerHTML);
+    num.innerHTML = compactNum;
+}

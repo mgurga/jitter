@@ -46,7 +46,7 @@ public class JitterApplication {
 		if(taccountRepository == null)
 			log.warn("taccount repository failed to autowire");
 		
-		String[] accs = {"Twitter", "Google", "Android"};
+		String[] accs = {"Twitter", "Google", "Android", "Microsoft"};
 		for(int i = 0; i < accs.length; i++) {
 			log.info("(" + (i + 1) + "/" + accs.length + ") loading default account: @" + accs[i]);
 			defaultaccounts.add(getTAcc(accs[i]));

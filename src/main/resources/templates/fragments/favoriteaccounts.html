@@ -2,9 +2,10 @@
 <html>
     <div th:fragment="accounts">
         <div id="fabar">
+            <p>|</p>
             <tr th:each="fa : ${fas}">
                 <a class="favoriteaccount" th:text="${fa.handle}" th:href="'/' + ${fa.handle}" />
-                <p> - </p>
+                <p>|</p>
             </tr>
         </div>
         <style>

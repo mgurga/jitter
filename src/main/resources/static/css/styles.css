@@ -4,6 +4,10 @@ html {
     font-family: monospace !important;
 }
 
+body {
+    margin: 0;
+}
+
 .favoriteaccount {
     color: white;
 }
@@ -51,6 +55,11 @@ html {
 .tweetimgs {
     max-width: 23%;
     max-height: 200px;
+}
+
+.bigtweetimgs {
+    max-width: 49%;
+    max-height: 49%;
 }
 
 .metrictable {

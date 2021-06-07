@@ -18,7 +18,7 @@ class ScraperTests {
 	@Tag("Tweet")
 	@Test
 	void simpleTweet() throws IOException {
-		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/1375500518366216199");
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/1375500518366216199", false);
 		
 		assertEquals("subtweeting is an art", result.getContent());
 		assertEquals("Twitter Web App", result.getDevice());
@@ -30,7 +30,7 @@ class ScraperTests {
 	@Tag("Tweet")
 	@Test
 	void simpleTweetWithLink() throws IOException {
-		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/508964519872176129");
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/508964519872176129", false);
 		
 		assertEquals("A new way for you to discover and buy products on Twitter:", result.getContent());
 		assertEquals("TweetDeck", result.getDevice());
@@ -42,7 +42,7 @@ class ScraperTests {
 	@Tag("Tweet")
 	@Test
 	void simpleTweetWithImage() throws IOException {
-		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/673882166980284416");
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/Twitter/status/673882166980284416", false);
 		
 		assertEquals("Starting today, we’re introducing a richer photo experience on https://twitter.com/: "
 				+ "https://blog.twitter.com/2015/a-new-look-for-your-twittercom-photos", result.getContent());
@@ -55,7 +55,7 @@ class ScraperTests {
 	@Tag("Tweet")
 	@Test
 	void multilineTweet() throws IOException {
-		Tweet result = scraper.getTweetFromURL("https://twitter.com/TwitterDev/status/1370110639545417729");
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/TwitterDev/status/1370110639545417729", false);
 		
 		assertEquals("On Tuesday at 12 pm EST, @jessicagarson will cover how to start working with the data returned from v2 of the #twitterapi \n"
 				+ "\n"
@@ -71,7 +71,7 @@ class ScraperTests {
 	@Tag("Tweet")
 	@Test
 	void multilineRetweet() throws IOException {
-		Tweet result = scraper.getTweetFromURL("https://twitter.com/TwitterDev/status/1371363033352638467");
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/TwitterDev/status/1371363033352638467", false);
 		
 		assertEquals("If you're using v2 full-archive search for Academic Research, you won't want to miss this livestream hosted by our research dev advocate @suhemparack.\n"
 				+ "\n"
@@ -85,7 +85,7 @@ class ScraperTests {
 	@Tag("Tweet")
 	@Test
 	void imageTweet() throws IOException {
-		Tweet result = scraper.getTweetFromURL("https://twitter.com/GoogleDoodles/status/1385443314523115520");
+		Tweet result = scraper.getTweetFromURL("https://twitter.com/GoogleDoodles/status/1385443314523115520", false);
 		
 		assertEquals("Today’s #GoogleDoodle celebrates Ñ—not only a letter but a representation of Hispanic heritage.\n"
 				+ "\n"

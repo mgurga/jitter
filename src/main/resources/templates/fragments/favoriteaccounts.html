@@ -5,14 +5,23 @@
             <tr th:each="fa : ${fas}">
                 <a class="favoriteaccount" th:text="'[' + ${fa.handle} + ']'" th:href="'/' + ${fa.handle}" />
             </tr>
-            <p> | custom accounts: </p>
+            <p> | pinned accounts: </p>
             <div id="cabar"></div>
-            <button onClick="addAccount();">+</button>
+            <button class="cabarbtn" onClick="addAccount();">+</button>
         </div>
         <style>
             #fabar > *, #cabar > * {
                 display: inline-block;
                 margin: 0;
+            }
+            
+            .cabarbtn {
+                border: 1px solid white;
+                color: white;
+                background-color: #111111;
+                margin-left: 4px !important;
+                padding-top: 0px;
+                padding-bottom: 0px;
             }
         </style>
     </div>

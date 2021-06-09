@@ -37,21 +37,24 @@ function createAccountButtons() {
         return;
     cas = cas.split(",");
     for(let ca of cas) {
-        var opening = document.createElement("p");
-        var ending = document.createElement("p");
-        opening.innerHTML = "[";
-        ending.innerHTML = "] ";
-        cabar.append(opening);
-        var acclink = document.createElement("a");
-        acclink.className = "favoriteaccount";
-        acclink.innerHTML = ca;
-        acclink.href = "/" + ca;
-        cabar.append(acclink);
-        var deletebtn = document.createElement("button");
-        deletebtn.innerHTML = "-";
-        deletebtn.addEventListener("click", function() {removeAccount(ca)});
-        cabar.append(deletebtn);
-        cabar.append(ending);
+        if(ca != "") {
+            var opening = document.createElement("p");
+            var ending = document.createElement("p");
+            opening.innerHTML = "[";
+            ending.innerHTML = "] ";
+            cabar.append(opening);
+            var acclink = document.createElement("a");
+            acclink.className = "favoriteaccount";
+            acclink.innerHTML = ca;
+            acclink.href = "/" + ca;
+            cabar.append(acclink);
+            var deletebtn = document.createElement("button");
+            deletebtn.innerHTML = "X";
+            deletebtn.className = "cabarbtn";
+            deletebtn.addEventListener("click", function() {removeAccount(ca)});
+            cabar.append(deletebtn);
+            cabar.append(ending);
+        }
     }
 }
 
